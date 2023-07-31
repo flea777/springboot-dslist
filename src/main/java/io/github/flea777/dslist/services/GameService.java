@@ -3,6 +3,7 @@ package io.github.flea777.dslist.services;
 import io.github.flea777.dslist.dto.GameDTO;
 import io.github.flea777.dslist.dto.GameMinDTO;
 import io.github.flea777.dslist.entities.Game;
+import io.github.flea777.dslist.projections.GameMinProjection;
 import io.github.flea777.dslist.repositores.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,11 @@ public class GameService {
     public GameDTO findById(Long id) {
         Game result = gameRepository.findById(id).get();
         return new GameDTO(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long listId) {
+        List<GameMinProjection> result = gameRepository.searchByList(listId);
+        return result.stream().map(x -> new GameMinDTO(x)).toList();
     }
 }
